@@ -1,85 +1,185 @@
-# IF-Neuron-Fault-Dataset v1.0
+# Testing Analog Spiking Neurons: Finding the Defects the Spikes Hide
 
-A transistor-level fault dataset for an analog **integrate-and-fire spiking neuron** (21 transistors; El-Sayed et al. IOLTS 2020 / Serrano-Gotarredona et al. TCAS-I 2006),
-simulated in **two technologies** (open GF180MCU with ngspice; TSMC 65 nm with HSPICE) with **46 literature-based defects**, independent local mismatch, die-level process
-variation, and readouts that go beyond the spike train: membrane voltages, **supply current** and internal nodes. It also contains controlled sensitivity, drift and
-readout-tap-loading experiments. Every random draw is seeded and logged, so every neuron can be regenerated.
+**Authors:** Tushar Dudeja, Vishal Gupta, Vellore Institute of Technology (VIT)
+**Tools:** ngspice 41 + open GF180MCU PDK, Synopsys PrimeSim HSPICE + TSMC 65 nm models, Python (scikit-learn)
 
-> **What this repository contains:** the full **GF180MCU** dataset (open PDK), all code for the GF180 flow, every
-> evaluation script, and the result summaries for both technologies. The **TSMC 65 nm** simulated data and the TSMC
-> deck generators are **not included**: they derive from a foundry model library licensed to the institute.
-> TSMC numbers quoted below are aggregate analysis results.
+Neuromorphic chips contain thousands of small analog neuron circuits, and every one
+of them has to be tested after manufacturing to catch defects such as a shorted or
+open transistor. The difficulty is that **healthy neurons are not identical**:
+process variation makes each one fire slightly differently, so a mildly defective
+neuron can look just like a healthy one.
 
-## At a glance
-| | GF180MCU (ngspice 41) | TSMC 65 nm (HSPICE V-2023.12-SP2) |
-|---|---|---|
-| Independent neurons in the main set | **49,840** (280 dies; per die 40 healthy + 3 per defect) | **60,000** (150 dies x 50 classes x 8 local-mismatch draws) |
-| Stimulus | 10 us current pulse at 50 / 100 / 200 / 400 nA (all 4 on every neuron) | same |
-| Defect classes | 46 defects + healthy | 46 defects + healthy (healthy in 4 replicate groups) |
-| Corners | MC (global + local), TT, SS, FF | MC (global + local), TT, SS, FF |
-| Readouts | 16 (spike timing, membrane voltages) | 28 (adds supply current and internal nodes) |
-| Extension groups | sensitivity (51), drift (1,280), tap loading (1,320) neuron-conditions | sensitivity (1 deck), drift (20 dies), tap loading (10 dies) |
-| Redistribution | derived from an open PDK, see below | **internal: derived from a licensed foundry model, do not redistribute** |
+This project builds a large, transistor-level, literature-based simulation of
+defects in a published spiking neuron, in two chip technologies, and uses it to
+answer a practical question: **what should a production test measure?**
 
-Supplementary: `data/gf180/supplement_*` re-simulates 2,080 of the same GF180 neurons (healthy plus the 4 hardest defects) with supply-current and internal-node readouts.
-Supplementary: `data/gf180/severity_sweep_*` holds graded-severity defects (stuck-on resistance 10 ohm to 1 Mohm, partially open gates) at 100 nA with all readouts.
+**Main finding.** A test that looks only at the output spikes misses about **11 %**
+of defective neurons, and the missed ones are not random: they are defects in the
+neuron's post-spike handshake/reset path, which barely change the spikes. Adding
+two measurements of the **current the neuron draws from its supply** (charge per
+spike and peak current) catches **all of them** in simulation, even with a single
+input pulse.
 
-## Folder layout
-```
-IF-Neuron-Fault-Dataset_v1.0/
-  README.md                     this file
-  docs/
-    METHODOLOGY.md              circuit, defect model, variation model, simulation set-up
-    CIRCUIT.md                  netlist connectivity, design values, role of every device
-    DATA_DICTIONARY.md          every column, unit and code list
-    PROVENANCE.md               where every modelling choice comes from
-    RESULTS.md                  what the dataset shows (headline numbers and experiment tables)
-    KNOWN_ISSUES.md             caveats, flagged records, limits - read before using
-    REFERENCES.md               literature and tools
-  data/
-    gf180/                      readouts.csv.gz, neuron_parameters.jsonl.gz, solver_status.csv, supplement_*
-    (tsmc65/ not included: licensed foundry-model data)
-    gf180_severity_sweep/       graded defect severity (supplementary)
-  results/                      raw text/CSV output of every analysis script
-  code/                         generators, parsers and evaluation scripts (see code/README.md)
-  examples/quickstart.py        load the data and reproduce the headline result in a few minutes
-  SHA256SUMS.txt                checksums of every data file
-```
+---
 
-## Quick start
-```python
-import pandas as pd
-g = pd.read_csv("data/gf180/readouts.csv.gz", low_memory=False)     # one row per neuron per stimulus
-main = g[g.kind == "main"]
-print(main.defect_id.value_counts().head())
-```
-`python examples/quickstart.py` pivots the GF180 data to one row per neuron and reproduces the GF180 headline (spike train only
-versus + membrane readouts). It averages 3 die splits and gives about 10.9 % / 3.9 % missed (6-split values: 10.3 % / 3.7 %).
-Scripts named `eval_*` without a `gf180_` prefix analyse the TSMC 65 nm data and need that (non-public) data to run.
+## 1. The circuit
 
-## Recommended evaluation protocol
-1. Split **by die**, never by neuron: neurons of one die share a global process draw. Use 60 / 20 / 20 dies for train / validation / test.
-2. Train a healthy-versus-faulty detector, set the threshold at **1 % false reject of healthy validation neurons**, report the **miss rate of faulty test neurons**.
-3. Exclude `is_nominal == 1` rows from independent-sample statistics (they are HSPICE's nominal sample, one per deck).
-4. Report mean and standard deviation over several random die splits.
+The 21-transistor integrate-and-fire neuron of El-Sayed et al. (IOLTS 2020), which
+is the event block of the fabricated cortical-layer chip of Serrano-Gotarredona et
+al. (IEEE TCAS-I, 2006). It was chosen because it is a real, published design with a
+published transistor-level defect study.
 
-## Headline results (details in docs/RESULTS.md)
-TSMC 65 nm, faulty neurons missed at 1 % false reject, mean of 6 die splits:
+A membrane capacitor (about 140 fF) integrates the input current; when the membrane
+voltage reaches the comparator reference (1.6 V) the neuron raises a request, an
+acknowledge triggers the reset, and a 3 V, 8.4 ns output spike is produced. At
+100 nA input the healthy neuron fires at 1.54 MHz, and the rate is linear in the
+input current (about 0.0134 MHz/nA).
 
-| Readouts | Missed |
+![Neuron circuit and the devices whose defects the spikes hide](figures/fig1_circuit.png)
+
+![Healthy output waveform](figures/fig0_output_waveform.png)
+
+## 2. Defects and process variation
+
+| | |
 |---|---|
-| spike train only | 11.4 % +- 2.8 |
-| + membrane-voltage readouts | 3.3 % +- 1.3 |
-| **+ supply current (charge per spike, peak current)** | **0.0 % +- 0.0** |
+| Defects | 46: every transistor **stuck-on** (10 Ω drain–source) and **open-gate** (Esen et al., ITC 2016 model), plus membrane capacitor and output resistor ±50 % |
+| Global variation | each die gets one process draw from the foundry's own statistical models (Monte Carlo, plus TT/SS/FF corner dies) |
+| Local mismatch | per-transistor threshold shifts from the PDK's mismatch model |
+| Stimulus | 10 µs current pulse at 50, 100, 200 and 400 nA on every neuron |
+| Readouts | spike timing; membrane voltages; **supply charge and peak supply current**; internal nodes |
 
-The defects hidden from spikes and membrane readouts are devices of the post-spike handshake path (`mna`, `mnb`, `mn2`, `mn3`); the same devices are hidden in GF180.
-A single 100 nA pulse with all readouts already reaches 0.1 % missed. Defect location among the 46 classes: 72.6 % (spikes) -> 91.3 % (+Vm) -> 96.2 % (+supply).
+| Technology | Simulator | Independent neurons |
+|---|---|---|
+| GF180MCU (open PDK) | ngspice 41 | 49,840 (280 dies) |
+| TSMC 65 nm | HSPICE | 60,000 (150 dies × 50 classes × 8 draws) |
 
-## Redistribution and licence status
-- **GF180 data and code:** generated with the open GF180MCU PDK (Apache-2.0) and the open-source ngspice. A licence for this
-  repository has not been chosen yet; until then all rights are reserved. Contact the authors for reuse.
-- **TSMC 65 nm data:** derived from a foundry model library licensed to the institute and therefore not published here.
+Every random draw is seeded and logged, so each neuron can be regenerated exactly.
 
-## Authors and citation
-Tushar Dudeja, Vishal Gupta (work toward a test method for analog spiking neurons). Citation text to be added once the release is public.
-Version 1.0, generated 2026-10-18.
+## 3. How the test decides
+
+Neurons are split **by die** (60/20/20 % train/validation/test), so the test never
+sees a die it was trained on. A gradient-boosted classifier scores each neuron, and
+the threshold is set so that only **1 % of healthy neurons are rejected**. The figure
+of merit is the share of defective neurons that slip through (the miss rate),
+averaged over 6 random die splits.
+
+![Method: find the hidden defects, then add the readout that exposes them](figures/fig2_method.png)
+
+---
+
+## 4. Results
+
+### Detection by readout set (TSMC 65 nm, 60,000 neurons)
+
+| Readouts used | Defective neurons missed |
+|---|---|
+| Spike timing only | 11.4 % ± 2.8 |
+| + membrane voltage | 3.3 % ± 1.3 |
+| **+ supply charge and peak current** | **0.0 % ± 0.0** |
+| Supply readouts alone | 4.5 % ± 0.9 |
+
+GF180 gives the same picture: 10.3 % missed with spikes only, 3.7 % with membrane
+readouts.
+
+![Detection results](figures/fig5_detection.png)
+
+### Which defects hide, and why
+
+Eleven of the 46 defects are missed more than 5 % of the time by a spike-only test.
+The worst all sit in the **handshake/reset path**: the acknowledge-gated pull-down
+(`mna`, `mnb`) and the extra comparator tail branches (`mn2`, `mn3`). The same devices
+hide in both technologies.
+
+| Defect | Missed: spikes | + membrane | + supply |
+|---|---|---|---|
+| `mnb` open gate | 85 % | 27 % | 0.0 % |
+| `mn3` open gate | 82 % | 1.3 % | 0.0 % |
+| `mna` stuck-on | 81 % | 62 % | 0.2 % |
+| `mna` open gate | 81 % | 48 % | 0.0 % |
+| `mn2` open gate | 79 % | 3.9 % | 0.0 % |
+
+These devices conduct mainly *after* a spike, so a defect there changes the current
+drawn per spike but hardly changes how the membrane charges: the spike period moves
+by at most 1.8 %, while `mna` stuck-on raises the peak supply current by 17.1 % and
+`mnb` open gate raises the charge per pulse by 76.3 %.
+
+![Waveforms: healthy vs hidden defects](figures/fig3_waveforms.png)
+
+### A cheaper test
+
+- **Noise:** supply readouts still miss 0.0 % with up to 2 % measurement noise
+  (0.3 % at 5 %, 0.9 % at 10 %).
+- **One pulse is enough:** a single 100 nA pulse with all readouts misses only 0.1 %.
+- **Two-stage test:** score every neuron on spikes first and measure supply current
+  only for the uncertain ones. With 10 % of neurons defective, measuring 11 % of
+  neurons leaves 4.8 % missed, 20 % leaves 2.9 %, and 44 % leaves 0.7 %.
+
+![Test arrangement](figures/fig4_test_arrangement.png)
+![Noise and single pulse](figures/fig6_noise_single_pulse.png)
+![Two-stage test and process corners](figures/fig7_cascade_corners.png)
+
+### Locating the defect
+
+Identifying which of the 46 defects is present: **72.6 %** correct from spikes,
+**91.3 %** with membrane readouts and **96.2 %** with supply readouts (top-3: 90.5 /
+100 / 100 %). Only `mn1` stuck-on and `mn3` stuck-on cannot be told apart.
+
+### Drift, readout loading and defect severity
+
+- **Drift:** the smallest detectable `mn1` threshold drift falls from 89 mV
+  (spikes + membrane) to 13 mV with supply readouts, and to 1.8 mV when a neuron is
+  compared with its own earlier measurement.
+- **Readout tap:** probing the membrane node adds 5 ns of spike delay per fF. A test
+  trained without the tap rejects 75 % of good neurons at 25 fF; training with tap
+  examples brings that to 2.5 %.
+- **Severity:** shorts up to 1 kΩ are as detectable as 10 Ω; 1 MΩ shorts and weak
+  partial opens are largely undetectable with any readout.
+
+![Tap loading](figures/fig8_tap_loading.png)
+![Drift and identifiability](figures/fig9_drift_identifiability.png)
+![Defect severity](figures/fig10_severity.png)
+
+### What did not work
+
+- Subtracting the median of neighbouring neurons on the same die made detection
+  *worse* (10.3 % → 11.8 % missed).
+- Hand-engineered features (ratios across amplitudes, latency fits) gave no gain.
+- A test trained on one technology does not transfer to the other, even after
+  recalibration: the *method* transfers, a trained model does not.
+
+---
+
+## 5. Data and code in this repository
+
+| Path | Contents |
+|---|---|
+| `data/gf180/` | full GF180 dataset: readouts, every neuron's parameters and seeds, supply-current supplement, severity sweep |
+| `code/` | GF180 generators, the circuit and defect definitions, every evaluation script |
+| `results/` | output of every analysis, both technologies |
+| `docs/` | methodology, circuit, data dictionary, provenance, detailed results, known issues, references |
+| `examples/quickstart.py` | reproduces the GF180 headline in a few minutes |
+| `figures/` | the figures above |
+
+```bash
+python examples/quickstart.py
+```
+
+This gives about 10.9 % / 3.9 % missed (spikes / + membrane, 3 die splits; the
+6-split values are 10.3 % / 3.7 %).
+
+**TSMC 65 nm data is not included.** It derives from a foundry model library
+licensed to the institute; the TSMC numbers above are aggregate analysis results.
+Scripts named `eval_*` without a `gf180_` prefix need that data to run.
+
+## Limitations
+
+- Simulation only; measurement noise is added afterwards. No silicon.
+- One neuron topology, in two technologies.
+- The acknowledge signal is an ideal delayed element, not transistors.
+- Mostly catastrophic defects, plus a small graded-severity sweep.
+- Drift and tap-loading groups are small (20 and 10 dies).
+
+## License
+
+All rights reserved. Contact the authors for reuse.
