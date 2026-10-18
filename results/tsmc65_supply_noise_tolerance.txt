@@ -1,0 +1,7 @@
+relative noise on supply readouts | missed faulty %% at 1%% FR (mean+-sd of 3 splits) | defects still missed >5%%
+    0.0 %   |   0.0 +- 0.0 | 0  
+    0.5 %   |   0.0 +- 0.0 | 0  
+    1.0 %   |   0.0 +- 0.0 | 0  
+    2.0 %   |   0.0 +- 0.0 | 0  
+    5.0 %   |   0.3 +- 0.1 | 1  mna_on 12
+   10.0 %   |   0.9 +- 0.2 | 2  mna_on 31, mna_off 11

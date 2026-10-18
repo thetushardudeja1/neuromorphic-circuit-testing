@@ -1,0 +1,41 @@
+healthy TT neurons for sigma: 608 | sens rows 204
+
+parameter nudge sizes: device Vth 10 mV; Cm 2 %; Ibias 5 %; Vref 10 mV; Vrst 10 mV
+
+== spike + Vm readouts: 52 usable features x 25 parameters ==
+  singular values (sigma per nudge): max 74.5, min 0.208
+  directions resolvable above 0.1 sigma per nudge: 25 of 25
+  directions resolvable above 0.3 sigma per nudge: 23 of 25
+  directions resolvable above 1.0 sigma per nudge: 19 of 25
+
+== + supply current: 64 usable features x 25 parameters ==
+  singular values (sigma per nudge): max 74.5, min 0.367
+  directions resolvable above 0.1 sigma per nudge: 25 of 25
+  directions resolvable above 0.3 sigma per nudge: 25 of 25
+  directions resolvable above 1.0 sigma per nudge: 23 of 25
+
+== + internal nodes: 100 usable features x 25 parameters ==
+  singular values (sigma per nudge): max 189.3, min 1.857
+  directions resolvable above 0.1 sigma per nudge: 25 of 25
+  directions resolvable above 0.3 sigma per nudge: 25 of 25
+  directions resolvable above 1.0 sigma per nudge: 25 of 25
+
+== per-parameter size of the signature (|column| in healthy-sigma, + supply set) - weakest first ==
+  mp4        3.10
+  mi2        3.21
+  mp2        3.29
+  mp5        3.82
+  mpr        3.86
+  mpa        3.96
+  mn4        3.98
+  mn3        4.09
+  mna        5.19
+  mp1        5.24
+
+== pairs of parameters that look alike (cosine of signatures > 0.95) ==
+  (0 confusable pairs in total)
+
+== weakest directions with spike + Vm only: dominant parameters ==
+  sing.value 0.208 : mnr -0.44, mpa -0.36, mp2 +0.33, mnc +0.33
+  sing.value 0.263 : mn2 -0.57, mna -0.50, mnc +0.42, mpr -0.33
+  sing.value 0.394 : mnb +0.53, mp4 +0.45, mn2 -0.32, mi2 -0.30

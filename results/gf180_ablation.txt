@@ -1,0 +1,12 @@
+ablation, miss rate of faulty test neurons at 1% false reject
+  spike raw                                            miss  12.6 %   (false reject on test 1.3 %)
+  spike referenced (27% faulty neighbours)             miss  11.6 %   (false reject on test 1.3 %)
+  spike referenced (oracle: all-healthy neighbours)    miss  10.9 %   (false reject on test 1.1 %)
+  spike raw + neighbour median as extra features       miss  11.2 %   (false reject on test 0.9 %)
+  analog raw only                                      miss   5.4 %   (false reject on test 2.0 %)
+  analog referenced only                               miss   4.9 %   (false reject on test 2.1 %)
+  spike raw + analog raw                               miss   4.2 %   (false reject on test 1.1 %)
+  spike raw + analog referenced                        miss   4.1 %   (false reject on test 1.9 %)
+  spike ref + analog ref                               miss   4.4 %   (false reject on test 1.5 %)
+  spike ref + analog ref (oracle neighbours)           miss   3.8 %   (false reject on test 1.7 %)
+  spike+analog raw + neighbour medians as features     miss   4.1 %   (false reject on test 1.0 %)

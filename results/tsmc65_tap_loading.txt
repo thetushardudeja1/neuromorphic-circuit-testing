@@ -1,0 +1,48 @@
+  File "C:\Users\TUSHAR\anaconda3\Lib\site-packages\joblib\externals\loky\backend\context.py", line 257, in _count_physical_cores
+    cpu_info = subprocess.run(
+        "wmic CPU Get NumberOfCores /Format:csv".split(),
+        capture_output=True,
+        text=True,
+    )
+  File "C:\Users\TUSHAR\anaconda3\Lib\subprocess.py", line 554, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TUSHAR\anaconda3\Lib\subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\TUSHAR\anaconda3\Lib\subprocess.py", line 1554, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                             # no special security
+                             ^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                             cwd,
+                             ^^^^
+                             startupinfo)
+                             ^^^^^^^^^^^^
+tap dies: [np.int64(0), np.int64(1), np.int64(2), np.int64(3), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(15)] | tap neurons: 80
+
+(1) shift of each readout per fF of tap capacitance (healthy, in population sigma per fF; strongest 8 of 64)
+  t6@50 +0.23, lat@400 +0.18, lat@100 +0.18, lat@200 +0.18, lat@50 +0.18, t6@100 +0.17, t6@400 +0.17, t6@200 +0.17
+  -> a 25 fF tap moves the strongest readout by 5.6 population sigma; weakest of the useful set by 0.27
+
+(2) detector trained with NO tap, applied to tapped neurons (threshold = 1 %% false reject at tap 0 on held-out main dies)
+  tap   0 fF: healthy rejected   1.2 % (n=80) | defects missed   0.0 % (n=3680)
+  tap  10 fF: healthy rejected  17.5 % (n=80)
+  tap  25 fF: healthy rejected  73.8 % (n=80) | defects missed   0.0 % (n=3680)
+  tap  50 fF: healthy rejected 100.0 % (n=80)
+  tap 100 fF: healthy rejected 100.0 % (n=80)
+
+(3) same detector retrained with tapped examples (5 tap dies), tested on the other 5 tap dies
+  tap   0 fF: healthy rejected  no-tap detector   0.0 %  ->  tap-aware   2.5 % | defects missed   0.0 % ->   0.0 %
+  tap  10 fF: healthy rejected  no-tap detector  15.0 %  ->  tap-aware   0.0 %
+  tap  25 fF: healthy rejected  no-tap detector  75.0 %  ->  tap-aware   2.5 % | defects missed   0.0 % ->   0.6 %
+  tap  50 fF: healthy rejected  no-tap detector 100.0 %  ->  tap-aware  60.0 %
+  tap 100 fF: healthy rejected  no-tap detector 100.0 %  ->  tap-aware  35.0 %

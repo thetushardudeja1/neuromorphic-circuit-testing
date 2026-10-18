@@ -1,0 +1,10 @@
+
+=== mn1 drift: smallest drift detectable at 3 sigma (units: mV) ===
+  spike+Vm         population-referenced:  88.59 via ttrip@400  | per-neuron before/after:  1.782 via vtrip@100
+  spike+Vm+supply  population-referenced:  13.02 via qdd_all@50 | per-neuron before/after:  1.782 via vtrip@100
+  best 4 readouts (population ref): qdd_all@50 13.02mV, qdd_all@100 14.26mV, qdd_sp@50 15.24mV, qdd_all@200 17.48mV
+
+=== cm drift: smallest drift detectable at 3 sigma (units: %) ===
+  spike+Vm         population-referenced:  12.02 via lat@100    | per-neuron before/after:  0.169 via lat@50
+  spike+Vm+supply  population-referenced:  12.02 via lat@100    | per-neuron before/after:  0.169 via lat@50
+  best 4 readouts (population ref): lat@100 12.02%, lat@400 12.04%, lat@50 12.05%, lat@200 12.07%

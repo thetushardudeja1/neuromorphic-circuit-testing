@@ -1,0 +1,14 @@
+=== Study 4: cascade (10%% faulty mix). Columns: share of neurons that get the supply+Vm stage | missed faulty | overall false reject (mean of 3 splits) ===
+  escalate target    2%  -> actually   1.6% escalated | miss  12.1% | FR 0.42%
+  escalate target    5%  -> actually   4.1% escalated | miss   8.2% | FR 0.69%
+  escalate target   10%  -> actually  11.0% escalated | miss   4.8% | FR 0.83%
+  escalate target   20%  -> actually  19.8% escalated | miss   2.9% | FR 0.42%
+  escalate target   40%  -> actually  43.9% escalated | miss   0.7% | FR 0.28%
+  escalate target  100%  -> actually 100.0% escalated | miss   0.0% | FR 0.42%
+
+=== Study 5: one global threshold (1%% FR on pooled validation) - false reject / miss per corner on test dies, and with per-corner calibration ===
+  MC   global thr: FR  0.70% miss  0.01%   | per-corner thr: FR  0.45% miss  0.02%
+  TT   global thr: FR  0.00% miss  0.00%   | per-corner thr: FR  0.00% miss  0.00%
+  SS   global thr: FR  0.00% miss  0.00%   | per-corner thr: FR  0.00% miss  0.00%
+  FF   global thr: FR  0.00% miss  0.00%   | per-corner thr: FR  0.00% miss  0.00%
+  spread of false-reject rate between dies (sd of per-die FR): 2.28 points; share of dies with FR > 3%: 2.2%

@@ -1,0 +1,37 @@
+=== Study 1: self-normalised supply readouts vs noise (relative Gaussian noise on each raw supply value) ===
+  noise | spike+Vm + raw supply            | + self-normalised ratios         | spike+Vm + ratios only
+     0% | miss   0.0%  FR 0.4  bad-defects  0 | miss   0.1%  FR 0.1  bad-defects  0 | miss   0.1%  FR 0.3  bad-defects  0
+     2% | miss   0.0%  FR 1.0  bad-defects  0 | miss   0.0%  FR 0.6  bad-defects  0 | miss   0.0%  FR 0.7  bad-defects  0
+     5% | miss   0.3%  FR 0.9  bad-defects  1 | miss   0.4%  FR 0.4  bad-defects  1 | miss   0.5%  FR 0.9  bad-defects  1
+    10% | miss   1.1%  FR 1.6  bad-defects  2 | miss   1.2%  FR 1.1  bad-defects  2 | miss   1.6%  FR 1.0  bad-defects  2
+    20% | miss   2.1%  FR 0.9  bad-defects  2 | miss   2.1%  FR 0.7  bad-defects  2 | miss   2.3%  FR 0.4  bad-defects  2
+
+=== Study 2: minimal test - missed faulty %% at 1%% false reject by stimulus subset and readout family (test time ~ number of stimuli) ===
+  stimuli (nA)      spike only                        spike+Vm                          spike+Vm+supply                   minimal: lat,per,qdd_all,ipk      
+  50                 18.4% (n=6, bad 17)              8.8% (n=13, bad 10)              0.5% (n=16, bad 1)              9.6% (n=4, bad 7)            
+  100                18.3% (n=6, bad 15)             11.0% (n=13, bad 13)              0.1% (n=16, bad 0)              8.6% (n=4, bad 7)            
+  200                16.4% (n=6, bad 11)              5.9% (n=13, bad 6)              0.3% (n=16, bad 2)              8.0% (n=4, bad 7)            
+  400                14.2% (n=6, bad 10)              8.7% (n=13, bad 12)              0.4% (n=16, bad 1)              5.6% (n=4, bad 5)            
+  50+100             14.4% (n=12, bad 11)             10.3% (n=26, bad 12)              0.0% (n=32, bad 0)              8.4% (n=8, bad 7)            
+  50+200             12.8% (n=12, bad 10)              6.2% (n=26, bad 7)              0.1% (n=32, bad 0)              7.7% (n=8, bad 7)            
+  50+400             13.6% (n=12, bad 10)              4.8% (n=26, bad 6)              0.1% (n=32, bad 0)              4.5% (n=8, bad 5)            
+  100+200            14.0% (n=12, bad 11)              6.3% (n=26, bad 10)              0.0% (n=32, bad 0)              6.6% (n=8, bad 7)            
+  100+400            13.7% (n=12, bad 11)              4.3% (n=26, bad 6)              0.0% (n=32, bad 0)              4.4% (n=8, bad 5)            
+  200+400            12.6% (n=12, bad 10)              4.6% (n=26, bad 5)              0.1% (n=32, bad 0)              5.2% (n=8, bad 5)            
+  50+100+200+400     14.0% (n=24, bad 11)              2.8% (n=52, bad 3)              0.0% (n=64, bad 0)              5.7% (n=16, bad 5)            
+
+=== Study 3: stimulus choice from the sensitivity (identifiability) matrix: weakest singular value (sigma per nudge) per stimulus subset ===
+  stimuli (nA)      weakest sv   #dirs > 1 sigma   miss (spike+Vm+supply, Study 2)
+  50                   0.076     9 of 25          0.5%
+  100                  0.109     8 of 25          0.1%
+  200                  0.102     8 of 25          0.3%
+  400                  0.176     8 of 25          0.4%
+  50+100               0.004    14 of 25          0.0%
+  50+200               0.014    13 of 25          0.1%
+  50+400               0.022    14 of 25          0.1%
+  100+200              0.003    13 of 25          0.0%
+  100+400              0.008    12 of 25          0.0%
+  200+400              0.020    13 of 25          0.1%
+  50+100+200+400       0.331    20 of 25          0.0%
+
+done 339s

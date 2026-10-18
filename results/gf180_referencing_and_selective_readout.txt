@@ -1,0 +1,46 @@
+neurons 49838 (healthy 11200, faulty 38638), dies 280, features: spike 24, analog 28
+split by die: train 168 dies / val 56 / test 56 ; neurons 29904 / 9968 / 9966
+trained P1 spike raw (27s)
+trained P2 spike referenced (30s)
+trained P3 spike+analog referenced (33s)
+
+=== Detection: miss rate of faulty neurons at 1% false reject (thresholds from validation dies; results on 9966 test-die neurons) ===
+  P1 spike raw                 miss rate  10.5 %   (actual false reject on test 0.6 %)
+  P2 spike referenced          miss rate  11.5 %   (actual false reject on test 0.7 %)
+  P3 spike+analog referenced   miss rate   5.2 %   (actual false reject on test 0.8 %)
+  P4 selective (20% readout)   miss rate   7.0 %   (actual false reject on test 1.1 %)
+  P4: analog readout acquired for 21.1% of neurons (at 25% fault prevalence), 13.2% of all test neurons at this die mix
+
+=== Per-defect miss rate at 1%% false reject (test dies): spike-raw -> referenced -> +analog (all) -> selective ===
+              n  P1  P2  P3  P4
+defect                         
+mn2_off     168  97  99  82  85
+mn3_off     168  95  98  27  63
+mna_on      168  90  95  86  90
+mna_off     168  75  84  36  44
+mpa_on      168  70  75   0  19
+mnb_off     168  40  47   1  12
+mi2_off     168   1  20   6   4
+mnr_off     168  16  13   0   2
+mc2_on      168   0   0   0   0
+mc2_off     168   0   0   0   0
+mc1_off     168   0   0   0   0
+mc1_on      168   0   0   0   0
+cm_minus50  168   0   0   0   0
+cm_plus50   168   0   0   0   0
+mn2_on      168   0   0   0   0
+mn1_on      168   0   0   0   0
+mn1_off     168   0   0   1   0
+mi2_on      168   0   0   0   0
+mi1_off     168   0   0   0   0
+mi1_on      168   0   0   0   0
+mn4_off     168   0   0   0   0
+mn3_on      168   1   0   0   0
+defects with P2 miss > 50%: 5 ; of which P3 miss < 50%: 3 ; P4 miss < 50%: 2
+
+=== Defect-location accuracy (46 classes, faulty test neurons) ===
+  P2 spike referenced          top-1 17.3 %   top-3 19.3 %   (46s)
+  P3 spike+analog referenced   top-1 19.9 %   top-3 24.5 %   (62s)
+  P4 selective                 top-1 16.4 %   (analog readout for 10% of these)
+
+done in 62 s

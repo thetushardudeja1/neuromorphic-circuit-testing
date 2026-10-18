@@ -1,0 +1,18 @@
+healthy @100 nA: latency 8.52e-07 s, period 7.96e-07 s, width 7.9e-09 s, late-window mean level 1.67e-07 V (sd latency 4.1e-08 s)
+
+(A) behaviour classes (counts):
+class
+no spike-level effect (timing within 3 sigma)    14
+parametric timing                                11
+dead (no spikes)                                  9
+stuck-at-1 (output high, no spikes)               5
+saturated / free-running                          3
+long spike                                        3
+stuck-at-X (output at 1.14 V, no spikes)          1
+
+(B) 46-class defect-location accuracy (test dies): 96.2 %
+   45 groups out of 46 defects (2 defects sit in a group with at least one look-alike)
+   look-alike group: mn1_on, mn3_on
+   group-level accuracy: 97.7 %
+
+wrote results/tsmc65_behavioural_fault_model.csv

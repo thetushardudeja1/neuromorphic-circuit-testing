@@ -1,0 +1,47 @@
+defect,n,spike_frac,lat_ratio,lat_shift_sigma,period_ratio,width_ratio,late_level,class,group
+cm_minus50,1200,1.0,0.585,-8.6244,0.5481,0.9742,0.0,parametric timing,cm_minus50
+cm_plus50,1200,1.0,1.4128,8.577,1.4499,1.0559,0.0,parametric timing,cm_plus50
+mc1_off,1200,1.0,3.7088,56.2875,3.9366,0.8889,0.0,parametric timing,mc1_off
+mc1_on,1200,0.0,,,,,3.1136,"stuck-at-1 (output high, no spikes)",mc1_on
+mc2_off,1200,0.0358,-5.8091,-141.49,,,0.0,dead (no spikes),mc2_off
+mc2_on,1200,0.0,,,,,0.0,dead (no spikes),mc2_on
+mi1_off,1200,1.0,0.998,-0.0425,0.9841,0.8985,0.0,no spike-level effect (timing within 3 sigma),mi1_off
+mi1_on,1200,0.0,,,,,3.1136,"stuck-at-1 (output high, no spikes)",mi1_on
+mi2_off,1200,1.0,0.9921,-0.1645,0.9853,1.066,0.0,no spike-level effect (timing within 3 sigma),mi2_off
+mi2_on,1200,0.0,,,,,0.0,dead (no spikes),mi2_on
+mn1_off,1200,1.0,1.2492,5.1789,1.2734,1.0014,0.0,parametric timing,mn1_off
+mn1_on,1200,1.0,0.5679,-8.9779,0.5642,1.0166,0.0,parametric timing,"mn1_on, mn3_on"
+mn2_off,1200,1.0,0.9988,-0.0241,1.0169,0.9954,0.0,no spike-level effect (timing within 3 sigma),mn2_off
+mn2_on,1200,1.0,0.5679,-8.9779,0.5642,1.0166,0.0,parametric timing,mn2_on
+mn3_off,1200,1.0,0.999,-0.0216,0.9992,1.0043,0.0,no spike-level effect (timing within 3 sigma),mn3_off
+mn3_on,1200,1.0,0.5679,-8.9779,0.5642,1.0185,0.0,parametric timing,"mn1_on, mn3_on"
+mn4_off,1200,1.0,0.9985,-0.0312,,,3.1136,no spike-level effect (timing within 3 sigma),mn4_off
+mn4_on,1200,0.0,,,,,0.0,dead (no spikes),mn4_on
+mn5_off,1200,1.0,1.1566,3.2531,1.0804,2.0922,0.0,parametric timing,mn5_off
+mn5_on,1200,0.0,,,,,0.0,dead (no spikes),mn5_on
+mn6_off,1200,0.0,,,,,0.0,dead (no spikes),mn6_off
+mn6_on,1200,0.0,,,,,3.1136,"stuck-at-1 (output high, no spikes)",mn6_on
+mna_off,1200,1.0,1.0004,0.0088,1.0021,1.0257,0.0,no spike-level effect (timing within 3 sigma),mna_off
+mna_on,1200,1.0,1.0,0.0003,1.0011,1.0206,0.0,no spike-level effect (timing within 3 sigma),mna_on
+mnb_off,1200,1.0,1.0007,0.0136,1.0026,1.02,0.0,no spike-level effect (timing within 3 sigma),mnb_off
+mnb_on,1200,1.0,0.995,-0.1035,0.0134,1.0694,1.501,saturated / free-running,mnb_on
+mnc_off,1200,1.0,0.949,-1.0599,0.7261,0.9922,0.0,parametric timing,mnc_off
+mnc_on,1200,1.0,1.0,0.0,,,3.1136,no spike-level effect (timing within 3 sigma),mnc_on
+mnr_off,1200,1.0,0.9266,-1.526,0.9297,1.002,0.0,parametric timing,mnr_off
+mnr_on,1200,0.0,,,,,0.0,dead (no spikes),mnr_on
+mp1_off,1200,1.0,-5.8568,-142.4806,0.0206,0.9105,1.3654,saturated / free-running,mp1_off
+mp1_on,1200,1.0,-5.8605,-142.5583,0.0172,1.0083,1.8064,saturated / free-running,mp1_on
+mp2_off,1200,1.0,0.9049,-1.9764,0.9757,0.8921,0.0,no spike-level effect (timing within 3 sigma),mp2_off
+mp2_on,1200,1.0,0.9998,-0.004,,,3.1136,no spike-level effect (timing within 3 sigma),mp2_on
+mp3_off,1200,0.0,,,,,1.1422,"stuck-at-X (output at 1.14 V, no spikes)",mp3_off
+mp3_on,1200,0.0,,,,,3.2984,"stuck-at-1 (output high, no spikes)",mp3_on
+mp4_off,1200,1.0,0.9998,-0.0035,2.0712,208.3771,0.0,long spike,mp4_off
+mp4_on,1200,0.0,,,,,0.0,dead (no spikes),mp4_on
+mp5_off,1200,1.0,1.0,0.0003,1.1065,17.1175,0.0,long spike,mp5_off
+mp5_on,1200,1.0,1.0,0.0001,0.9762,0.7742,0.0,parametric timing,mp5_on
+mpa_off,1200,1.0,1.0,0.0004,1.1212,21.5956,0.0,long spike,mpa_off
+mpa_on,1200,1.0,1.0,0.0004,0.9947,0.938,0.0,no spike-level effect (timing within 3 sigma),mpa_on
+mpr_off,1200,0.0,,,,,0.0,dead (no spikes),mpr_off
+mpr_on,1200,0.0,,,,,3.1136,"stuck-at-1 (output high, no spikes)",mpr_on
+rout_minus50,1200,1.0,1.0005,0.0097,1.0001,0.8662,0.0,no spike-level effect (timing within 3 sigma),rout_minus50
+rout_plus50,1200,1.0,0.9998,-0.0032,1.0009,1.0732,0.0,no spike-level effect (timing within 3 sigma),rout_plus50
