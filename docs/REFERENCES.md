@@ -15,4 +15,4 @@ Check bibliographic details against the PDFs before any submission; file names r
 - Synopsys HSPICE V-2023.12-SP2; TSMC 65 nm low-power model library `crn65lp_2d5_lk_v1d7` (licensed, not distributed).
 - Python 3, pandas, scikit-learn 1.6 (HistGradientBoostingClassifier) for the analyses.
 
-**Further related work, not yet read in full**: Sunter and Jurga, VTS 2021; Spyrou et al., ETS 2023 (in full); Madge et al., US6787379 and continuation US6943042.
+**Further related work, not yet read in full**: Spyrou et al., ETS 2023 (in full); Madge et al., US6787379 and continuation US6943042.
