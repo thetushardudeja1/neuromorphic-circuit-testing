@@ -1,4 +1,4 @@
-"""Patent pipeline on the GF180 dataset, evaluated with a train/val/test split BY DIE.
+"""Test pipeline on the GF180 dataset, evaluated with a train/val/test split BY DIE.
 
 P1 spike features, raw                       (spike-only test, no referencing)
 P2 spike features, neighbour-referenced      (die-level shift removed)
